@@ -1,4 +1,11 @@
 task :seed => :environment do
+# require model files
+  require 'C:/Sites/FantasyCoin/FantasyBitCoin/app/models/news_post.rb'
+  require 'C:/Sites/FantasyCoin/FantasyBitCoin/app/models/portfolio.rb'
+  require 'C:/Sites/FantasyCoin/FantasyBitCoin/app/models/stock.rb'
+  require 'C:/Sites/FantasyCoin/FantasyBitCoin/app/models/transaction.rb'
+  require 'C:/Sites/FantasyCoin/FantasyBitCoin/app/models/user.rb'
+
 # first delete all existing records
   NewsPost.all.delete
   Portfolio.all.delete
