@@ -41,7 +41,7 @@ task :seed => :environment do
                        price: Faker::Number.decimal(2, 5),
                        quantity: Faker::Number.digit,
                        transBuy: Faker::Boolean.boolean,
-                       date: Faker::Date.backward(60),
+                       date: Faker::Date.backward(60))
   end
 
 # 10 Users
