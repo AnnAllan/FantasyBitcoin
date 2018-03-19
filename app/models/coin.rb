@@ -1,4 +1,4 @@
-class Stock
+class Coin
   include Mongoid::Document
   field :symbol, type: String
   field :name, type: String

@@ -1,6 +1,6 @@
 class TestController < ApplicationController
   def get
-    response = { message: "This is a response from the Rails API!" }
-    json_response(response)
+    user = User.first
+    json_response(user)
   end
 end

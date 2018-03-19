@@ -1,8 +1,8 @@
 class Transaction
   include Mongoid::Document
-  has_one :user
-  field :type, type: Boolean
-  field :price, type: Decimal
+  belongs_to :user
+
+  field :price, type: Float
   field :symFrom, type: String
   field :symTo, type: String
   field :quantity, type: Integer

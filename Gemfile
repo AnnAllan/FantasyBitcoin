@@ -63,6 +63,7 @@ group :test do
   gem 'capybara', '~> 2.14'
   gem 'mongoid-rspec', git: 'https://github.com/mongoid-rspec/mongoid-rspec.git'
   gem 'email_spec', '~> 2.1'
+  gem 'database_cleaner'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

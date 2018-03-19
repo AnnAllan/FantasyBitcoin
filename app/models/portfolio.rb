@@ -1,6 +1,6 @@
 class Portfolio
   include Mongoid::Document
-  field :cashInvested, type: Decimal
-  field :profit, type: Decimal
-  has_one :user
+  field :cashInvested, type: Float
+  field :profit, type: Float
+  belongs_to :user
 end
