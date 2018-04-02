@@ -44,17 +44,17 @@ class CoinsController < ApplicationController
     json_response(client_response || {})
   end
 
-  def coin
+  def coin_pair_detail
     fsym = params["fsym"]
     tsym = params["tsym"]
     fdate = params["fdate"].to_date
     tdate = params["tdate"].to_date
+    market = params["market"]
     limit = calcLimit(fdate)
     time_arr = calcTime(fdate, tdate)
-    puts
 
-    if (fsym && tsym && limit)
-      response = getApiResponse("https://min-api.cryptocompare.com/data/histoday?fsym=#{fsym}&tsym=#{tsym}&limit=#{limit}")
+    if (fsym && tsym && limit && market)
+      response = getApiResponse("https://min-api.cryptocompare.com/data/histoday?fsym=#{fsym}&tsym=#{tsym}&limit=#{limit}&e=#{market}")
 
       api_data = JSON.parse response.read_body
 

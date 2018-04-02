@@ -3,7 +3,6 @@ import * as CoinActions from '../actions/CoinActions';
 const initial = {
   coins: {
     index: {},
-    symbolsOnDisplay: [],
     govDisplayCurrency: 'USD',
     cryptoDisplayCurrency: 'BTC',
     currentPage: 1,
@@ -14,27 +13,13 @@ const initial = {
   },
 };
 
-const filterSymbolsOnDisplay = (coinIndex, currentPage, coinsPerPage) => {
-  const startIndex = (currentPage - 1) * coinsPerPage;
-  const endIndex = (currentPage) * coinsPerPage;
-  const thisCoin = (symbol) => coinIndex[symbol];
-  return Object.keys(coinIndex)
-    .filter(symbol => {
-      return (
-        +thisCoin(symbol).SortOrder > startIndex 
-        &&
-        +thisCoin(symbol).SortOrder <= endIndex
-      );
-    })
-    .sort((symbolA, symbolB) => +thisCoin(symbolA).SortOrder > +thisCoin(symbolB).SortOrder);
-};
-
 const spreadIndexData = (coinIndex, newIndexData) => {
-  return Object.keys(newIndexData).reduce((coinIndex, coinSymbol) => {
-    return coinIndex[coinSymbol] = {
+  return Object.keys(newIndexData.coins).reduce((coinIndex, coinSymbol) => {
+    coinIndex[coinSymbol] = {
       ...coinIndex[coinSymbol],
-      ...newIndexData[coinSymbol]
+      ...newIndexData.coins[coinSymbol]
     }
+    return coinIndex;
   }, coinIndex);
 }
 export const coins = (state=initial.coins, action) => {
@@ -53,14 +38,13 @@ export const coins = (state=initial.coins, action) => {
         error: null,
         rootImgUrl: action.data.BaseImageUrl,
         index: action.data.Data,
-        symbolsOnDisplay: filterSymbolsOnDisplay(action.data.Data, state.currentPage, state.coinsPerPage)
       };
     case CoinActions.GET_COIN_INDEX_DATA_SUCCESS:
       return {
         ...state,
         isFetching: false,
         error: null,
-        index: spreadIndexData(state.index, action.data.coins)
+        index: spreadIndexData(state.index, action.data)
       };
     case CoinActions.GET_COIN_INDEX_FAILURE:
     case CoinActions.GET_COIN_INDEX_DATA_FAILURE:
@@ -73,13 +57,11 @@ export const coins = (state=initial.coins, action) => {
       return {
         ...state,
         coinsPerPage: action.data, 
-        symbolsOnDisplay: filterSymbolsOnDisplay(state.index, state.currentPage, action.data)
       };
     case CoinActions.CHANGE_PAGE:
       return {
         ...state,
         currentPage: action.data,
-        symbolsOnDisplay: filterSymbolsOnDisplay(state.index, action.data, state.coinsPerPage)
       };
     default:
       return state;

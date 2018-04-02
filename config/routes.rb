@@ -3,7 +3,7 @@ Rails.application.routes.draw do
 
   resources :coins, only: [:index]
 
-  get '/coin', to: 'coins#coin'
+  get '/coin_pair_detail', to: 'coins#coin_pair_detail'
 
   get '/double_api_test', to: 'coins#double_api_test'
 
