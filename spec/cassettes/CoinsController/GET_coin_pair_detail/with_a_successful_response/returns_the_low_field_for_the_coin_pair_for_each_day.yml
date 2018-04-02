@@ -1,0 +1,48 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://min-api.cryptocompare.com/data/histoday?e=Bitfinex&fsym=ETH&limit=8&tsym=USD
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.4.6 (Ubuntu)
+      Date:
+      - Thu, 29 Mar 2018 01:12:48 GMT
+      Content-Type:
+      - application/json; charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept-Encoding
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - GET
+      Access-Control-Allow-Headers:
+      - Content-Type
+      Cache-Control:
+      - public, max-age=29
+      Cryptocompare-Cache-Hit:
+      - 'true'
+    body:
+      encoding: ASCII-8BIT
+      string: '{"Response":"Success","Type":100,"Aggregated":false,"Data":[{"time":1521590400,"close":558.78,"high":590.11,"low":544.49,"open":556.38,"volumefrom":184758.56,"volumeto":104635517.5},{"time":1521676800,"close":539.19,"high":578.18,"low":514,"open":558.78,"volumefrom":174861.03,"volumeto":94593925.52},{"time":1521763200,"close":543.85,"high":544.28,"low":504.58,"open":539.19,"volumefrom":192973.83,"volumeto":100048838.67},{"time":1521849600,"close":518.8,"high":546.36,"low":517.85,"open":543.85,"volumefrom":108560.56,"volumeto":57982954.18},{"time":1521936000,"close":522.41,"high":537,"low":512.87,"open":518.8,"volumefrom":81571.27,"volumeto":42526859.31},{"time":1522022400,"close":485.2,"high":525.37,"low":466.63,"open":522.41,"volumefrom":224304.38,"volumeto":110522774.94},{"time":1522108800,"close":448.22,"high":491.5,"low":446,"open":485.2,"volumefrom":305074.4,"volumeto":140190869.24},{"time":1522195200,"close":445.43,"high":465.62,"low":438.69,"open":448.22,"volumefrom":164719.29,"volumeto":74172771.53},{"time":1522281600,"close":447.2,"high":447.22,"low":444.31,"open":445.43,"volumefrom":1797.76,"volumeto":801956.19}],"TimeTo":1522281600,"TimeFrom":1521590400,"FirstValueInArray":true,"ConversionType":{"type":"force_direct","conversionSymbol":""}}'
+    http_version: 
+  recorded_at: Thu, 29 Mar 2018 01:12:32 GMT
+recorded_with: VCR 4.0.0
