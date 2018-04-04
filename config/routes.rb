@@ -3,6 +3,8 @@ Rails.application.routes.draw do
 
   resources :coins, only: [:index]
 
+  resources :trades
+
   get '/coin_pair_detail', to: 'coins#coin_pair_detail'
 
   get '/double_api_test', to: 'coins#double_api_test'
