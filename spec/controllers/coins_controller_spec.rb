@@ -89,9 +89,35 @@ describe CoinsController do
     end
   end
 
-  describe "GET coin_pair_deail" do
+  describe "GET exchanges", :vcr do
+    it "returns the aggregate fields for the coin pair for the day", :vcr do
+      get :exchanges, params: { fsym: "ETH", tsym: "USD", limit: 8}
+      body = JSON.parse response.body
+      expect(body["Data"]["AggregatedData"]["price"]).to be_present
+      expect(body["Data"]["AggregatedData"]["last_update"]).to be_present
+      expect(body["Data"]["AggregatedData"]["volume_24hour_to"]).to be_present
+      expect(body["Data"]["AggregatedData"]["open_24hour"]).to be_present
+      expect(body["Data"]["AggregatedData"]["high_24hour"]).to be_present
+      expect(body["Data"]["AggregatedData"]["low_24hour"]).to be_present
+      expect(body["Data"]["AggregatedData"]["change_pct_24hour"]).to be_present
+    end
+
+    it "returns the individual fields for each exchange", :vcr do
+      get :exchanges, params: { fsym: "ETH", tsym: "USD", limit: 8}
+      body = JSON.parse response.body
+      expect(body["Data"]["Exchanges"]["0"]["market"]).to be_present
+      expect(body["Data"]["Exchanges"]["0"]["last_update"]).to be_present
+      expect(body["Data"]["Exchanges"]["0"]["volume_24hour_to"]).to be_present
+      expect(body["Data"]["Exchanges"]["0"]["open_24hour"]).to be_present
+      expect(body["Data"]["Exchanges"]["0"]["high_24hour"]).to be_present
+      expect(body["Data"]["Exchanges"]["0"]["low_24hour"]).to be_present
+      expect(body["Data"]["Exchanges"]["0"]["change_pct_24hour"]).to be_present
+    end
+  end
+
+  describe "GET coin_pair_detail" do
     context "with a successful response" do
-      it "returns the time field for the coin for each day", :vcr do
+      it "returns the time field for the coin pair for each day", :vcr do
         get :coin_pair_detail, params: { fsym: "ETH", tsym: "USD", fdate: "2018-03-21", tdate: "2018-03-23", market: "Bitfinex"}
         body = JSON.parse response.body
         expect(body["tsym"]["0"]["time"]).to be_present
@@ -99,7 +125,7 @@ describe CoinsController do
         expect(body["tsym"]["2"]["time"]).to be_present
       end
 
-      it "returns the close field for the coin for each day", :vcr do
+      it "returns the close field for the coin pair for each day", :vcr do
         get :coin_pair_detail, params: { fsym: "ETH", tsym: "USD", fdate: "2018-03-21", tdate: "2018-03-23", market: "Bitfinex"}
         body = JSON.parse response.body
         expect(body["tsym"]["0"]["close"]).to be_present
@@ -107,7 +133,7 @@ describe CoinsController do
         expect(body["tsym"]["2"]["close"]).to be_present
       end
 
-      it "returns the high field for the coin for each day", :vcr do
+      it "returns the high field for the coin pair for each day", :vcr do
         get :coin_pair_detail, params: { fsym: "ETH", tsym: "USD", fdate: "2018-03-21", tdate: "2018-03-23", market: "Bitfinex"}
         body = JSON.parse response.body
         expect(body["tsym"]["0"]["high"]).to be_present
@@ -115,7 +141,7 @@ describe CoinsController do
         expect(body["tsym"]["2"]["high"]).to be_present
       end
 
-      it "returns the low field for the coin for each day", :vcr do
+      it "returns the low field for the coin pair for each day", :vcr do
         get :coin_pair_detail, params: { fsym: "ETH", tsym: "USD", fdate: "2018-03-21", tdate: "2018-03-23", market: "Bitfinex"}
         body = JSON.parse response.body
         expect(body["tsym"]["0"]["low"]).to be_present
@@ -123,7 +149,7 @@ describe CoinsController do
         expect(body["tsym"]["2"]["low"]).to be_present
       end
 
-      it "returns the open field for the coin for each day", :vcr do
+      it "returns the open field for the coin pair for each day", :vcr do
         get :coin_pair_detail, params: { fsym: "ETH", tsym: "USD", fdate: "2018-03-21", tdate: "2018-03-23", market: "Bitfinex"}
         body = JSON.parse response.body
         expect(body["tsym"]["0"]["open"]).to be_present
@@ -131,7 +157,7 @@ describe CoinsController do
         expect(body["tsym"]["2"]["open"]).to be_present
       end
 
-      it "returns the volumefrom field for the coin for each day", :vcr do
+      it "returns the volumefrom field for the coin pair for each day", :vcr do
         get :coin_pair_detail, params: { fsym: "ETH", tsym: "USD", fdate: "2018-03-21", tdate: "2018-03-23", market: "Bitfinex"}
         body = JSON.parse response.body
         expect(body["tsym"]["0"]["volumefrom"]).to be_present
@@ -139,7 +165,7 @@ describe CoinsController do
         expect(body["tsym"]["2"]["volumefrom"]).to be_present
       end
 
-      it "returns the volumeto field for the coin for each day", :vcr do
+      it "returns the volumeto field for the coin pair for each day", :vcr do
         get :coin_pair_detail, params: { fsym: "ETH", tsym: "USD", fdate: "2018-03-21", tdate: "2018-03-23", market: "Bitfinex"}
         body = JSON.parse response.body
         expect(body["tsym"]["0"]["volumeto"]).to be_present

@@ -47,34 +47,65 @@ class CoinsController < ApplicationController
   def coin_pair_detail
     fsym = params["fsym"]
     tsym = params["tsym"]
-    fdate = params["fdate"].to_date
-    tdate = params["tdate"].to_date
+    fdate_string = params["fdate"]
+    tdate_string = params["tdate"]
     market = params["market"]
+
+    fdate = fdate_string.to_date
+    tdate = tdate_string.to_date
     limit = calcLimit(fdate)
     time_arr = calcTime(fdate, tdate)
 
-    if (fsym && tsym && limit && market)
-      response = getApiResponse("https://min-api.cryptocompare.com/data/histoday?fsym=#{fsym}&tsym=#{tsym}&limit=#{limit}&e=#{market}")
+    response = getApiResponse("https://min-api.cryptocompare.com/data/histoday?fsym=#{fsym}&tsym=#{tsym}&limit=#{limit}&e=#{market}")
+    api_data = JSON.parse response.read_body
 
-      api_data = JSON.parse response.read_body
-
-      client_response = {}
-      client_response["tsym"] = {}
-      time_arr.each do |time|
-        client_response["tsym"][time] = {}
-        client_response["tsym"][time]["close"] = api_data["Data"][time]["close"]
-        client_response["tsym"][time]["time"] = api_data["Data"][time]["time"]
-        client_response["tsym"][time]["high"] = api_data["Data"][time]["high"]
-        client_response["tsym"][time]["low"] = api_data["Data"][time]["low"]
-        client_response["tsym"][time]["open"] = api_data["Data"][time]["open"]
-        client_response["tsym"][time]["volumefrom"] = api_data["Data"][time]["volumefrom"]
-        client_response["tsym"][time]["volumeto"] = api_data["Data"][time]["volumeto"]
-
-
-
-      end
+    client_response = {}
+    client_response["tsym"] = {}
+    time_arr.each do |time|
+      client_response["tsym"][time] = {}
+      client_response["tsym"][time]["close"] = api_data["Data"][time]["close"]
+      client_response["tsym"][time]["time"] = api_data["Data"][time]["time"]
+      client_response["tsym"][time]["high"] = api_data["Data"][time]["high"]
+      client_response["tsym"][time]["low"] = api_data["Data"][time]["low"]
+      client_response["tsym"][time]["open"] = api_data["Data"][time]["open"]
+      client_response["tsym"][time]["volumefrom"] = api_data["Data"][time]["volumefrom"]
+      client_response["tsym"][time]["volumeto"] = api_data["Data"][time]["volumeto"]
     end
     json_response(client_response || {})
+  end
+
+  def exchanges
+    fsym = params["fsym"]
+    tsym = params["tsym"]
+    limit = params["limit"]
+
+    response = getApiResponse("https://min-api.cryptocompare.com/data/top/exchanges/full?fsym=#{fsym}&tsym=#{tsym}")
+    api_data = JSON.parse response.read_body
+
+    client_response = {}
+    client_response["Data"] ={}
+    client_response["Data"]["AggregatedData"] = {}
+    client_response["Data"]["AggregatedData"]["price"] = api_data["Data"]["AggregatedData"]["PRICE"]
+    client_response["Data"]["AggregatedData"][("last_update")] = api_data["Data"]["AggregatedData"]["LASTUPDATE"]
+    client_response["Data"]["AggregatedData"]["volume_24hour_to"] = api_data["Data"]["AggregatedData"]["VOLUME24HOURTO"]
+    client_response["Data"]["AggregatedData"]["open_24hour"] = api_data["Data"]["AggregatedData"]["OPEN24HOUR"]
+    client_response["Data"]["AggregatedData"]["high_24hour"] = api_data["Data"]["AggregatedData"]["HIGH24HOUR"]
+    client_response["Data"]["AggregatedData"]["low_24hour"] = api_data["Data"]["AggregatedData"]["LOW24HOUR"]
+    client_response["Data"]["AggregatedData"]["change_pct_24hour"] = api_data["Data"]["AggregatedData"]["CHANGEPCT24HOUR"]
+
+    client_response["Data"]["Exchanges"] = {}
+    api_data["Data"]["Exchanges"].each_index do |index|
+      client_response["Data"]["Exchanges"][index] = {}
+      client_response["Data"]["Exchanges"][index]["market"] = api_data["Data"]["Exchanges"][index]["MARKET"]
+      client_response["Data"]["Exchanges"][index]["last_update"] = api_data["Data"]["Exchanges"][index]["LASTUPDATE"]
+      client_response["Data"]["Exchanges"][index]["volume_24hour_to"] = api_data["Data"]["Exchanges"][index]["VOLUME24HOURTO"]
+      client_response["Data"]["Exchanges"][index]["open_24hour"] = api_data["Data"]["Exchanges"][index]["OPEN24HOUR"]
+      client_response["Data"]["Exchanges"][index]["high_24hour"] = api_data["Data"]["Exchanges"][index]["HIGH24HOUR"]
+      client_response["Data"]["Exchanges"][index]["low_24hour"] = api_data["Data"]["Exchanges"][index]["LOW24HOUR"]
+      client_response["Data"]["Exchanges"][index]["change_pct_24hour"] = api_data["Data"]["Exchanges"][index]["CHANGEPCT24HOUR"]
+      client_response["Data"]["Exchanges"][index]["price"] = api_data["Data"]["Exchanges"][index]["PRICE"]
+    end
+     json_response(client_response || {})
   end
 
   private
@@ -88,7 +119,7 @@ class CoinsController < ApplicationController
   end
 
   def calcLimit(fdate)
-    today = Time.now.to_date
+    today = Time.now.gmtime.to_date
     return (today - fdate).to_i
   end
 
@@ -102,4 +133,5 @@ class CoinsController < ApplicationController
     end
     return arr
   end
+
 end
