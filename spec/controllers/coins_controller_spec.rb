@@ -89,33 +89,34 @@ describe CoinsController do
     end
   end
 
+  describe "GET exchanges", :vcr do
+    it "returns the aggregate fields for the coin pair for the day", :vcr do
+      get :exchanges, params: { fsym: "ETH", tsym: "USD", limit: 8}
+      body = JSON.parse response.body
+      expect(body["Data"]["AggregatedData"]["price"]).to be_present
+      expect(body["Data"]["AggregatedData"]["last_update"]).to be_present
+      expect(body["Data"]["AggregatedData"]["volume_24hour_to"]).to be_present
+      expect(body["Data"]["AggregatedData"]["open_24hour"]).to be_present
+      expect(body["Data"]["AggregatedData"]["high_24hour"]).to be_present
+      expect(body["Data"]["AggregatedData"]["low_24hour"]).to be_present
+      expect(body["Data"]["AggregatedData"]["change_pct_24hour"]).to be_present
+    end
+
+    it "returns the individual fields for each exchange", :vcr do
+      get :exchanges, params: { fsym: "ETH", tsym: "USD", limit: 8}
+      body = JSON.parse response.body
+      expect(body["Data"]["Exchanges"]["0"]["market"]).to be_present
+      expect(body["Data"]["Exchanges"]["0"]["last_update"]).to be_present
+      expect(body["Data"]["Exchanges"]["0"]["volume_24hour_to"]).to be_present
+      expect(body["Data"]["Exchanges"]["0"]["open_24hour"]).to be_present
+      expect(body["Data"]["Exchanges"]["0"]["high_24hour"]).to be_present
+      expect(body["Data"]["Exchanges"]["0"]["low_24hour"]).to be_present
+      expect(body["Data"]["Exchanges"]["0"]["change_pct_24hour"]).to be_present
+    end
+  end
+
   describe "GET coin_pair_detail" do
     context "with a successful response" do
-
-      it "returns the aggregate fields for the coin pair for the day", :vcr do
-        get :coin_pair_detail, params: { fsym: "ETH", tsym: "USD"}
-        body = JSON.parse response.body
-        expect(body["Data"]["AggregatedData"]["price"]).to be_present
-        expect(body["Data"]["AggregatedData"]["last_update"]).to be_present
-        expect(body["Data"]["AggregatedData"]["volume_24hour_to"]).to be_present
-        expect(body["Data"]["AggregatedData"]["open_24hour"]).to be_present
-        expect(body["Data"]["AggregatedData"]["high_24hour"]).to be_present
-        expect(body["Data"]["AggregatedData"]["low_24hour"]).to be_present
-        expect(body["Data"]["AggregatedData"]["change_pct_24hour"]).to be_present
-      end
-
-      it "returns the individual fields for each exchange", :vcr do
-        get :coin_pair_detail, params: { fsym: "ETH", tsym: "USD"}
-        body = JSON.parse response.body
-        expect(body["Data"]["Exchanges"]["0"]["market"]).to be_present
-        expect(body["Data"]["Exchanges"]["0"]["last_update"]).to be_present
-        expect(body["Data"]["Exchanges"]["0"]["volume_24hour_to"]).to be_present
-        expect(body["Data"]["Exchanges"]["0"]["open_24hour"]).to be_present
-        expect(body["Data"]["Exchanges"]["0"]["high_24hour"]).to be_present
-        expect(body["Data"]["Exchanges"]["0"]["low_24hour"]).to be_present
-        expect(body["Data"]["Exchanges"]["0"]["change_pct_24hour"]).to be_present
-      end
-
       it "returns the time field for the coin pair for each day", :vcr do
         get :coin_pair_detail, params: { fsym: "ETH", tsym: "USD", fdate: "2018-03-21", tdate: "2018-03-23", market: "Bitfinex"}
         body = JSON.parse response.body

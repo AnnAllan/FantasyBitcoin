@@ -5,6 +5,8 @@ Rails.application.routes.draw do
 
   get '/coin_pair_detail', to: 'coins#coin_pair_detail'
 
+  get '/exchanges', to: 'coins#exchanges'
+
   get '/coin_pair_history', to: 'coins#coin_pair_history'
 
   get '/double_api_test', to: 'coins#double_api_test'
