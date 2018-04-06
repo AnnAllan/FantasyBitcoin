@@ -46,3 +46,4 @@ class TradesController < ApplicationController
   def safe_params
     params.require(:trade).permit(:user, :user_id, :date, :exchange, :fsym, :fquantity, :tsym, :tquantity)
   end
+end
