@@ -44,6 +44,38 @@ class CoinsController < ApplicationController
     json_response(client_response || {})
   end
 
+  def exchanges
+    fsym = params["fsym"]
+    tsym = params["tsym"]
+    limit = params["limit"]
+
+    response = getApiResponse("https://min-api.cryptocompare.com/data/top/exchanges/full?fsym=#{fsym}&tsym=#{tsym}")
+    api_data = JSON.parse response.read_body
+
+    client_response = {}
+    client_response["aggregated"] = {}
+    client_response["aggregated"]["exchange"] = "aggregated"
+    client_response["aggregated"]["lastUpdated"] = api_data["Data"]["AggregatedData"]["LASTUPDATE"]
+    client_response["aggregated"]["closing"] = api_data["Data"]["AggregatedData"]["PRICE"]
+    client_response["aggregated"]["high"] = api_data["Data"]["AggregatedData"]["HIGH24HOUR"]
+    client_response["aggregated"]["low"] = api_data["Data"]["AggregatedData"]["LOW24HOUR"]
+    client_response["aggregated"]["open"] = api_data["Data"]["AggregatedData"]["OPEN24HOUR"]
+    client_response["aggregated"]["volumefrom"] = api_data["Data"]["AggregatedData"]["VOLUME24HOURTO"]
+
+    client_response["exchanges"] = {}
+    api_data["Data"]["Exchanges"].each_index do |index|
+      client_response["exchanges"][index] = {}
+      client_response["exchanges"][index]["exchange"] = api_data["Data"]["Exchanges"][index]["MARKET"]
+      client_response["exchanges"][index]["lastUpdated"] = api_data["Data"]["Exchanges"][index]["LASTUPDATE"]
+      client_response["exchanges"][index]["closing"] = api_data["Data"]["Exchanges"][index]["PRICE"]
+      client_response["exchanges"][index]["high"] = api_data["Data"]["Exchanges"][index]["HIGH24HOUR"]
+      client_response["exchanges"][index]["low"] = api_data["Data"]["Exchanges"][index]["LOW24HOUR"]
+      client_response["exchanges"][index]["open"] = api_data["Data"]["Exchanges"][index]["OPEN24HOUR"]
+      client_response["exchanges"][index]["volumefrom"] = api_data["Data"]["Exchanges"][index]["VOLUME24HOURTO"]
+    end
+     json_response(client_response || {})
+  end
+
   def coin_pair_detail
     fsym = params["fsym"]
     tsym = params["tsym"]
@@ -74,39 +106,6 @@ class CoinsController < ApplicationController
     json_response(client_response || {})
   end
 
-  def exchanges
-    fsym = params["fsym"]
-    tsym = params["tsym"]
-    limit = params["limit"]
-
-    response = getApiResponse("https://min-api.cryptocompare.com/data/top/exchanges/full?fsym=#{fsym}&tsym=#{tsym}")
-    api_data = JSON.parse response.read_body
-
-    client_response = {}
-    client_response["Data"] ={}
-    client_response["Data"]["AggregatedData"] = {}
-    client_response["Data"]["AggregatedData"]["price"] = api_data["Data"]["AggregatedData"]["PRICE"]
-    client_response["Data"]["AggregatedData"][("last_update")] = api_data["Data"]["AggregatedData"]["LASTUPDATE"]
-    client_response["Data"]["AggregatedData"]["volume_24hour_to"] = api_data["Data"]["AggregatedData"]["VOLUME24HOURTO"]
-    client_response["Data"]["AggregatedData"]["open_24hour"] = api_data["Data"]["AggregatedData"]["OPEN24HOUR"]
-    client_response["Data"]["AggregatedData"]["high_24hour"] = api_data["Data"]["AggregatedData"]["HIGH24HOUR"]
-    client_response["Data"]["AggregatedData"]["low_24hour"] = api_data["Data"]["AggregatedData"]["LOW24HOUR"]
-    client_response["Data"]["AggregatedData"]["change_pct_24hour"] = api_data["Data"]["AggregatedData"]["CHANGEPCT24HOUR"]
-
-    client_response["Data"]["Exchanges"] = {}
-    api_data["Data"]["Exchanges"].each_index do |index|
-      client_response["Data"]["Exchanges"][index] = {}
-      client_response["Data"]["Exchanges"][index]["market"] = api_data["Data"]["Exchanges"][index]["MARKET"]
-      client_response["Data"]["Exchanges"][index]["last_update"] = api_data["Data"]["Exchanges"][index]["LASTUPDATE"]
-      client_response["Data"]["Exchanges"][index]["volume_24hour_to"] = api_data["Data"]["Exchanges"][index]["VOLUME24HOURTO"]
-      client_response["Data"]["Exchanges"][index]["open_24hour"] = api_data["Data"]["Exchanges"][index]["OPEN24HOUR"]
-      client_response["Data"]["Exchanges"][index]["high_24hour"] = api_data["Data"]["Exchanges"][index]["HIGH24HOUR"]
-      client_response["Data"]["Exchanges"][index]["low_24hour"] = api_data["Data"]["Exchanges"][index]["LOW24HOUR"]
-      client_response["Data"]["Exchanges"][index]["change_pct_24hour"] = api_data["Data"]["Exchanges"][index]["CHANGEPCT24HOUR"]
-      client_response["Data"]["Exchanges"][index]["price"] = api_data["Data"]["Exchanges"][index]["PRICE"]
-    end
-     json_response(client_response || {})
-  end
 
   private
 

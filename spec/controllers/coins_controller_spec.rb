@@ -93,25 +93,25 @@ describe CoinsController do
     it "returns the aggregate fields for the coin pair for the day", :vcr do
       get :exchanges, params: { fsym: "ETH", tsym: "USD", limit: 8}
       body = JSON.parse response.body
-      expect(body["Data"]["AggregatedData"]["price"]).to be_present
-      expect(body["Data"]["AggregatedData"]["last_update"]).to be_present
-      expect(body["Data"]["AggregatedData"]["volume_24hour_to"]).to be_present
-      expect(body["Data"]["AggregatedData"]["open_24hour"]).to be_present
-      expect(body["Data"]["AggregatedData"]["high_24hour"]).to be_present
-      expect(body["Data"]["AggregatedData"]["low_24hour"]).to be_present
-      expect(body["Data"]["AggregatedData"]["change_pct_24hour"]).to be_present
+      expect(body["aggregated"]["exchange"]).to be_present
+      expect(body["aggregated"]["lastUpdated"]).to be_present
+      expect(body["aggregated"]["closing"]).to be_present
+      expect(body["aggregated"]["high"]).to be_present
+      expect(body["aggregated"]["low"]).to be_present
+      expect(body["aggregated"]["open"]).to be_present
+      expect(body["aggregated"]["volumefrom"]).to be_present
     end
 
     it "returns the individual fields for each exchange", :vcr do
       get :exchanges, params: { fsym: "ETH", tsym: "USD", limit: 8}
       body = JSON.parse response.body
-      expect(body["Data"]["Exchanges"]["0"]["market"]).to be_present
-      expect(body["Data"]["Exchanges"]["0"]["last_update"]).to be_present
-      expect(body["Data"]["Exchanges"]["0"]["volume_24hour_to"]).to be_present
-      expect(body["Data"]["Exchanges"]["0"]["open_24hour"]).to be_present
-      expect(body["Data"]["Exchanges"]["0"]["high_24hour"]).to be_present
-      expect(body["Data"]["Exchanges"]["0"]["low_24hour"]).to be_present
-      expect(body["Data"]["Exchanges"]["0"]["change_pct_24hour"]).to be_present
+      expect(body["exchanges"]["0"]["exchange"]).to be_present
+      expect(body["exchanges"]["0"]["lastUpdated"]).to be_present
+      expect(body["exchanges"]["0"]["closing"]).to be_present
+      expect(body["exchanges"]["0"]["high"]).to be_present
+      expect(body["exchanges"]["0"]["low"]).to be_present
+      expect(body["exchanges"]["0"]["open"]).to be_present
+      expect(body["exchanges"]["0"]["volumefrom"]).to be_present
     end
   end
 
